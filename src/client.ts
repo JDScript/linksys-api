@@ -1,6 +1,16 @@
-/// <reference path="types.ts" />
-
 import axios, { AxiosError } from "axios";
+import {
+  LinksysCoreService,
+  LinksysDeviceListService,
+  LinksysFirewallService,
+  LinksysFirmwareUpdateService,
+  LinksysGuestNetworkService,
+  LinksysNodesService,
+  LinksysRouterManagementService,
+  LinksysRouterService,
+  LinksysRouterUPnPService,
+  LinksysWirelessAPService,
+} from "./services";
 
 class LinksysClient {
   constructor(
@@ -13,11 +23,73 @@ class LinksysClient {
       username,
       password
     );
+
+    this._Core = new LinksysCoreService(this);
+    this._DeviceList = new LinksysDeviceListService(this);
+    this._Firewall = new LinksysFirewallService(this);
+    this._FirmwareUpdate = new LinksysFirmwareUpdateService(this);
+    this._GuestNetwork = new LinksysGuestNetworkService(this);
+    this._Nodes = new LinksysNodesService(this);
+    this._Router = new LinksysRouterService(this);
+    this._RouterManagement = new LinksysRouterManagementService(this);
+    this._RouterUPnP = new LinksysRouterUPnPService(this);
+    this._WirelessAP = new LinksysWirelessAPService(this);
   }
 
   private requestInstance;
 
-  private async call<T = any>(action: string, body: object): Promise<T> {
+  // Services
+  private _Core: LinksysCoreService;
+  public get Core() {
+    return this._Core;
+  }
+
+  private _DeviceList: LinksysDeviceListService;
+  public get DeviceList() {
+    return this._DeviceList;
+  }
+
+  private _Firewall: LinksysFirewallService;
+  public get Firewall() {
+    return this._Firewall;
+  }
+
+  private _FirmwareUpdate: LinksysFirmwareUpdateService;
+  public get FirmwareUpdate() {
+    return this._FirmwareUpdate;
+  }
+
+  private _GuestNetwork: LinksysGuestNetworkService;
+  public get GuestNetwork() {
+    return this._GuestNetwork;
+  }
+
+  private _Nodes: LinksysNodesService;
+  public get Nodes() {
+    return this._Nodes;
+  }
+
+  private _Router: LinksysRouterService;
+  public get Router() {
+    return this._Router;
+  }
+
+  private _RouterManagement: LinksysRouterManagementService;
+  public get RouterManagement() {
+    return this._RouterManagement;
+  }
+
+  private _RouterUPnP: LinksysRouterUPnPService;
+  public get RouterUPnP() {
+    return this._RouterUPnP;
+  }
+
+  private _WirelessAP: LinksysWirelessAPService;
+  public get WirelessAP() {
+    return this._WirelessAP;
+  }
+
+  public async call<T = any>(action: string, body: object): Promise<T> {
     try {
       const resp = await this.requestInstance.request({
         method: "post",
@@ -59,254 +131,6 @@ class LinksysClient {
     });
 
     return instance;
-  }
-
-  // Public APIs
-  // Core
-  public Core_CheckAdminPassword() {
-    return this.call<Linksys.Response.Base<undefined>>(
-      "core/CheckAdminPassword",
-      {}
-    );
-  }
-
-  public Core_GetAdminPasswordAuthStatus() {
-    return this.call<
-      Linksys.Response.Base<Linksys.Core.AdminPasswordAuthStatus>
-    >("core/GetAdminPasswordAuthStatus", {});
-  }
-
-  public Core_GetAdminPasswordHint() {
-    return this.call<Linksys.Response.Base<Linksys.Core.AdminPasswordHint>>(
-      "core/GetAdminPasswordHint",
-      {}
-    );
-  }
-
-  public Core_GetAdminPasswordRestrictions() {
-    return this.call<
-      Linksys.Response.Base<Linksys.Core.AdminPasswordRestrictions>
-    >("core/GetAdminPasswordRestrictions", {});
-  }
-
-  public Core_GetDeviceInfo() {
-    return this.call<Linksys.Response.Base<Linksys.Core.DeviceInfo>>(
-      "core/GetDeviceInfo",
-      {}
-    );
-  }
-
-  public Core_IsAdminPasswordDefault() {
-    return this.call<
-      Linksys.Response.Base<Linksys.Core.IsAdminPasswordDefault>
-    >("core/IsAdminPasswordDefault", {});
-  }
-
-  public Core_Reboot() {
-    return this.call<Linksys.Response.Base<undefined>>("core/Reboot", {});
-  }
-
-  public Core_SetAdminPassword(params: {
-    adminPassword: string;
-    passwordHint?: string;
-  }) {
-    return this.call<Linksys.Response.Base<undefined>>(
-      "core/SetAdminPassword2",
-      params
-    );
-  }
-
-  // Device List
-  public DeviceList_GetDevices(params?: { sinceRevision: number }) {
-    return this.call<Linksys.Response.Base<Linksys.DeviceList.Devices>>(
-      "devicelist/GetDevices",
-      params ?? {}
-    );
-  }
-
-  public DeviceList_GetLocalDevice() {
-    return this.call<Linksys.Response.Base<Linksys.DeviceList.LocalDevice>>(
-      "devicelist/GetLocalDevice",
-      {}
-    );
-  }
-
-  public DeviceList_SetDeviceProperties(params: {
-    deviceID: string;
-    propertiesToModify: {
-      name: string;
-      value: string;
-    }[];
-  }) {
-    return this.call<Linksys.Response.Base<undefined>>(
-      "devicelist/SetDeviceProperties",
-      params
-    );
-  }
-
-  // Firewall
-  public Firewall_GetALGSettings() {
-    return this.call<Linksys.Response.Base<Linksys.Firewall.ALGSettings>>(
-      "firewall/GetALGSettings",
-      {}
-    );
-  }
-
-  // FirmwareUpdate
-  public FirmwareUpdate_GetFirmwareUpdateSettings() {
-    return this.call<
-      Linksys.Response.Base<Linksys.FirmwareUpdate.FirmwareUpdateSettings>
-    >("firmwareupdate/GetFirmwareUpdateSettings", {});
-  }
-
-  public FirmwareUpdate_GetFirmwareUpdateStatus() {
-    return this.call<
-      Linksys.Response.Base<Linksys.FirmwareUpdate.FirmwareUpdateStatus>
-    >("firmwareupdate/GetFirmwareUpdateStatus", {});
-  }
-
-  public FirmwareUpdate_SetFirmwareUpdateSettings(params: {
-    autoUpdateWindow: {
-      durationMinutes: number;
-      startMinute: number;
-    };
-    updatePolicy: "Manual" | "AutomaticallyCheckAndInstall";
-  }) {
-    return this.call<Linksys.Response.Base<undefined>>(
-      "firmwareupdate/SetFirmwareUpdateSettings",
-      params
-    );
-  }
-
-  public FirmwareUpdate_UpdateFirmwareNow(params: { onlyCheck: boolean }) {
-    return this.call<Linksys.Response.Base<undefined>>(
-      "firmwareupdate/UpdateFirmwareNow",
-      params
-    );
-  }
-
-  // GuestNetwork
-  public GuestNetwork_GetGuestRadioSettings() {
-    return this.call<
-      Linksys.Response.Base<Linksys.GuestNetwork.GuestRadioSettings>
-    >("guestnetwork/GetGuestRadioSettings", {});
-  }
-
-  public GuestNetwork_SetGuestRadioSettings(
-    params: Linksys.GuestNetwork.GuestRadioSettings
-  ) {
-    return this.call<Linksys.Response.Base<undefined>>(
-      "guestnetwork/SetGuestRadioSettings",
-      params
-    );
-  }
-
-  // Router
-  public Router_GetDHCPClientLeases() {
-    return this.call<Linksys.Response.Base<Linksys.Router.DHCPClientLeases>>(
-      "router/GetDHCPClientLeases",
-      {}
-    );
-  }
-
-  public Router_GetEthernetPortConnections() {
-    return this.call<
-      Linksys.Response.Base<Linksys.Router.EthernetPortConnections>
-    >("router/GetEthernetPortConnections", {});
-  }
-
-  public Router_GetExpressForwardingSettings() {
-    return this.call<
-      Linksys.Response.Base<Linksys.Router.ExpressForwardingSettings>
-    >("router/GetExpressForwardingSettings", {});
-  }
-
-  public Router_GetIPv6Settings() {
-    return this.call<Linksys.Response.Base<Linksys.Router.IPv6Settings>>(
-      "router/GetIPv6Settings2",
-      {}
-    );
-  }
-
-  public Router_GetLANSettings() {
-    return this.call<Linksys.Response.Base<Linksys.Router.LANSettings>>(
-      "router/GetLANSettings",
-      {}
-    );
-  }
-
-  public Router_GetMACAddressCloneSettings() {
-    return this.call<
-      Linksys.Response.Base<Linksys.Router.MACAddressCloneSettings>
-    >("router/GetMACAddressCloneSettings", {});
-  }
-
-  public Router_GetRoutingSettings() {
-    return this.call<Linksys.Response.Base<Linksys.Router.RoutingSettings>>(
-      "router/GetRoutingSettings",
-      {}
-    );
-  }
-
-  public Router_GetWANStatus() {
-    return this.call<Linksys.Response.Base<Linksys.Router.WANStatus>>(
-      "router/GetWANStatus3",
-      {}
-    );
-  }
-
-  // Router Management
-  public RouterManagement_GetManagementSettings() {
-    return this.call<
-      Linksys.Response.Base<Linksys.RouterManagement.ManagementSettings>
-    >("routermanagement/GetManagementSettings2", {});
-  }
-
-  public RouterManagement_GetRemoteManagementStatus() {
-    return this.call<
-      Linksys.Response.Base<Linksys.RouterManagement.RemoteManagementStatus>
-    >("routermanagement/GetRemoteManagementStatus", {});
-  }
-
-  // Router UPnP
-  public RouterUPnP_GetUPnPSettings() {
-    return this.call<Linksys.Response.Base<Linksys.RouterUPnP.UPnPSettings>>(
-      "routerupnp/GetUPnPSettings",
-      {}
-    );
-  }
-
-  // WirelessAP
-  public WirelessAP_GetRadioInfo() {
-    return this.call<Linksys.Response.Base<Linksys.WirelessAP.RadioInfo>>(
-      "wirelessap/GetRadioInfo3",
-      {}
-    );
-  }
-
-  public WirelessAP_SetRadioSettings(params: {
-    bandSteeringMode: string;
-    isBandSteeringEnabled: boolean;
-    radios: {
-      radioID: string;
-      settings: {
-        isEnabled: boolean;
-        mode: string;
-        ssid: string;
-        broadcastSSID: boolean;
-        channelWidth: string;
-        channel: number;
-        security: string;
-        wpaPersonalSettings: {
-          passphrase: string;
-        };
-      };
-    }[];
-  }) {
-    return this.call<Linksys.Response.Base<undefined>>(
-      "wirelessap/SetRadioSettings3",
-      params
-    );
   }
 }
 

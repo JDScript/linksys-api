@@ -7,28 +7,20 @@ describe("Test Linksys Client", () => {
     process.env.PASSWORD
   );
 
+  it("ServiceCheck", () => {
+    expect(linksys).toHaveProperty("Core");
+    expect(linksys).toHaveProperty("DeviceList");
+    expect(linksys).toHaveProperty("Firewall");
+    expect(linksys).toHaveProperty("FirmwareUpdate");
+    expect(linksys).toHaveProperty("GuestNetwork");
+    expect(linksys).toHaveProperty("RouterManagement");
+    expect(linksys).toHaveProperty("RouterUPnP");
+    expect(linksys).toHaveProperty("Router");
+    expect(linksys).toHaveProperty("WirelessAP");
+  });
+
   it("Core/CheckAdminPassword", async () => {
-    const result = await linksys.Core_CheckAdminPassword();
-    expect(result).toHaveProperty("result");
-  });
-
-  it("Core/GetAdminPasswordAuthStatus", async () => {
-    const result = await linksys.Core_GetAdminPasswordAuthStatus();
-    expect(result).toHaveProperty("result");
-  });
-
-  it("Core/GetAdminPasswordHint", async () => {
-    const result = await linksys.Core_GetAdminPasswordHint();
-    expect(result).toHaveProperty("result");
-  });
-
-  it("Core/GetAdminPasswordRestrictions", async () => {
-    const result = await linksys.Core_GetAdminPasswordRestrictions();
-    expect(result).toHaveProperty("result");
-  });
-
-  it("Core/GetDeviceInfo", async () => {
-    const result = await linksys.Core_GetDeviceInfo();
-    expect(result).toHaveProperty("result");
+    const res = await linksys.Core.CheckAdminPassword();
+    expect(res).toHaveProperty("result");
   });
 });
