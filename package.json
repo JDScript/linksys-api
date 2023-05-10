@@ -1,6 +1,6 @@
 {
   "name": "@jdscript/linksys",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A typescript wrapper to access linksys routers api",
   "title": "Linksys Router API",
   "main": "dist/index.js",
