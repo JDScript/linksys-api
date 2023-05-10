@@ -1,0 +1,46 @@
+{
+  "name": "@jdscript/linksys",
+  "version": "1.0.0",
+  "description": "A typescript wrapper to access linksys routers api",
+  "title": "Linksys Router API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "homepage": "https://github.com/JDScript/linksys-api",
+  "bugs": {
+    "url": "https://github.com/JDScript/linksys-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JDScript/linksys-api"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "keywords": [
+    "linksys",
+    "router",
+    "api"
+  ],
+  "author": "JDScript <jd@jdscript.net>",
+  "url": "https://github.com/JDSript",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.1.2",
+    "cross-env": "^7.0.3",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  }
+}
